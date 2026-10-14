@@ -2,13 +2,25 @@
 
 namespace App\Bootstrap;
 
+use App\Adapters\Outbound\Persistence\DbBookRepository;
+use App\Adapters\Outbound\Persistence\DbLoanReader;
+use App\Adapters\Outbound\Persistence\DbLoanRepository;
+use App\Adapters\Outbound\Persistence\DbMemberRepository;
+use App\Adapters\Outbound\Persistence\DbUnitOfWork;
 use App\Adapters\Outbound\Persistence\DbUserRepository;
 use App\Adapters\Outbound\Security\Argon2PasswordHasher;
 use App\Adapters\Outbound\Security\JwtTokenIssuer;
 use App\Adapters\Outbound\Security\SystemClock;
+use App\Adapters\Outbound\Storage\DiskCoverStorage;
+use App\Application\Ports\Outbound\BookRepository;
 use App\Application\Ports\Outbound\Clock;
+use App\Application\Ports\Outbound\CoverStorage;
+use App\Application\Ports\Outbound\LoanReader;
+use App\Application\Ports\Outbound\LoanRepository;
+use App\Application\Ports\Outbound\MemberRepository;
 use App\Application\Ports\Outbound\PasswordHasher;
 use App\Application\Ports\Outbound\TokenIssuer;
+use App\Application\Ports\Outbound\UnitOfWork;
 use App\Application\Ports\Outbound\UserRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,6 +35,12 @@ final class PortBindingsServiceProvider extends ServiceProvider
         $this->app->singleton(Clock::class, fn () => new SystemClock((int) config('library.clock_offset_days')));
         $this->app->singleton(PasswordHasher::class, Argon2PasswordHasher::class);
         $this->app->singleton(UserRepository::class, DbUserRepository::class);
+        $this->app->singleton(BookRepository::class, DbBookRepository::class);
+        $this->app->singleton(MemberRepository::class, DbMemberRepository::class);
+        $this->app->singleton(LoanRepository::class, DbLoanRepository::class);
+        $this->app->singleton(LoanReader::class, DbLoanReader::class);
+        $this->app->singleton(UnitOfWork::class, DbUnitOfWork::class);
+        $this->app->singleton(CoverStorage::class, fn () => new DiskCoverStorage((string) config('library.covers_dir')));
         $this->app->singleton(TokenIssuer::class, fn ($app) => new JwtTokenIssuer(
             (string) config('library.jwt_secret'),
             (int) config('library.jwt_ttl'),

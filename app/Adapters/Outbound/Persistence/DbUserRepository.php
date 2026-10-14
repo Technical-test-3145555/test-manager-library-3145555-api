@@ -23,12 +23,12 @@ final class DbUserRepository implements UserRepository
     public function create(string $id, string $username, string $passwordHash, string $role): bool
     {
         try {
-            DB::table('library.user')->insert([
+            DB::transaction(fn () => DB::table('library.user')->insert([
                 'id' => $id,
                 'username' => $username,
                 'password_hash' => $passwordHash,
                 'role' => $role,
-            ]);
+            ]));
         } catch (UniqueConstraintViolationException) {
             return false;
         }
