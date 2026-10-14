@@ -20,12 +20,17 @@ final class Book
         public readonly Isbn $isbn,
         public readonly string $categoryId,
         private Quantity $total,
+        ?int $available = null,
     ) {
         if (trim($title) === '') {
             throw DomainError::validation('El título no puede estar vacío.');
         }
 
-        $this->available = $total->value;
+        $this->available = $available ?? $total->value;
+
+        if ($this->available < 0 || $this->available > $total->value) {
+            throw DomainError::validation('Los disponibles deben estar entre 0 y el total.');
+        }
     }
 
     public function available(): int
