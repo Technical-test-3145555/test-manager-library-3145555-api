@@ -16,4 +16,7 @@ RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoload
 EXPOSE 80
 
 # The schema is owned by the migrations (ADR-001): they run on start, against the empty engine.
-CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=80"]
+# The initial admin comes from the environment (D-10). PHP_CLI_SERVER_WORKERS lets the server answer
+# several requests at once, which the last-copy concurrency check needs (RNF-2).
+ENV PHP_CLI_SERVER_WORKERS=8
+CMD ["sh", "-c", "php artisan migrate --force && php artisan app:bootstrap-admin && php artisan serve --host=0.0.0.0 --port=80"]
