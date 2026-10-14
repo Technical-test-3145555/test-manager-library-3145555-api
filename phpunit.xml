@@ -23,9 +23,13 @@
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="BROADCAST_CONNECTION" value="null"/>
         <env name="CACHE_STORE" value="array"/>
-        <env name="DB_CONNECTION" value="sqlite"/>
-        <env name="DB_DATABASE" value=":memory:"/>
-        <env name="DB_URL" value=""/>
+        <env name="DB_CONNECTION" value="pgsql"/>
+        <env name="DB_SCHEMA" value="library"/>
+        <env name="JWT_SECRET" value="test-only-secret-that-is-long-enough-for-hs256"/>
+        <env name="ADMIN_USERNAME" value="admin"/>
+        <env name="ADMIN_PASSWORD" value="test-only-admin-password"/>
+        <env name="CORS_ORIGIN" value="http://localhost:5173"/>
+        <env name="COVERS_DIR" value="/tmp/covers-test"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
