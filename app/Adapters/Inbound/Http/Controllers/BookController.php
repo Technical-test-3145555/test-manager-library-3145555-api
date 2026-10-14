@@ -18,12 +18,14 @@ final class BookController
     private const RULES = [
         'title' => ['required', 'string'],
         'author' => ['required', 'string'],
-        'category_id' => ['required', 'string'],
+        'category_id' => ['required', 'uuid'],
         'total_copies' => ['required', 'integer'],
     ];
 
     public function index(Request $request, SearchBooksService $service): JsonResponse
     {
+        $request->validate(['category_id' => ['nullable', 'uuid']]);
+
         return response()->json($service->search(
             $request->query('q'),
             $request->query('category_id'),
