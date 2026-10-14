@@ -128,7 +128,9 @@ return [
     */
 
     'migrations' => [
-        'table' => 'migrations',
+        // Qualified on purpose: the framework table stays in public so `library` holds only the six domain
+        // tables, and Laravel finds it on every start, also after a restart (the schema is created by a migration).
+        'table' => 'public.migrations',
         'update_date_on_publish' => true,
     ],
 
